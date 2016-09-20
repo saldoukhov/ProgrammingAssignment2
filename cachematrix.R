@@ -1,15 +1,36 @@
-## Put comments here that give an overall description of what your
-## functions do
+## A pair of functions to improve performance when 
+## solving matrices via caching
 
-## Write a short comment describing this function
+## makeCacheMatrix creates a structure (list) that is 
+## used to store cached solution of the matrix
 
 makeCacheMatrix <- function(x = matrix()) {
-
+    s <- NULL
+    set <- function(y) {
+        x <<- y
+        s <<- NULL
+    }
+    get <- function() x
+    setsolution <- function(solution) s <<- solution
+    getsolution <- function() s
+    list(set = set, get = get,
+         setsolution = setsolution,
+         getsolution = getsolution)
 }
 
 
-## Write a short comment describing this function
+## cacheSolve uses the result produced by makeCacheMatrix to 
+## either solve the matrix or return the cached result if 
+## matrix was previousely solved
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+    s <- x$getsolution()
+    if(!is.null(s)) {
+        message("getting cached data")
+        return(s)
+    }
+    data <- x$get()
+    s <- solve(data, ...)
+    x$setsolution(s)
+    s    
 }
